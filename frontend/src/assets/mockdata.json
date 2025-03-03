@@ -1,0 +1,34 @@
+{
+    "lands": [
+      {
+        "id": 1,
+        "ownerNames": ["John Doe", "Jane Doe"],
+        "landAddress": "123 Main St, Cityville",
+        "ownershipHistoryHash": "QmX1HashForOwnershipHistory1",
+        "legalDocumentsHash": "QmX2HashForLegalDocuments1",
+        "owners": ["0xabc123...", "0xdef456..."],
+        "shares": [60, 40],
+        "isVerified": false
+      },
+      {
+        "id": 2,
+        "ownerNames": ["Robert Smith"],
+        "landAddress": "456 Oak Avenue, Townsville",
+        "ownershipHistoryHash": "QmY1HashForOwnershipHistory2",
+        "legalDocumentsHash": "QmY2HashForLegalDocuments2",
+        "owners": ["0x789ghi..."],
+        "shares": [100],
+        "isVerified": true
+      },
+      {
+        "id": 3,
+        "ownerNames": ["Alice Johnson", "Bob Johnson"],
+        "landAddress": "789 Pine Road, Villagetown",
+        "ownershipHistoryHash": "QmZ1HashForOwnershipHistory3",
+        "legalDocumentsHash": "QmZ2HashForLegalDocuments3",
+        "owners": ["0xjkl101...", "0xmno202..."],
+        "shares": [50, 50],
+        "isVerified": false
+      }
+    ]
+  }
