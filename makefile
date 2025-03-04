@@ -44,6 +44,8 @@ deployNFTGeneration:
 deployEnrollment:
 	@forge script script/Enrollment.s.sol:CounterScript $(NETWORK_ARGS)
 
+deploySingleOwnerNFT:
+	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
 
 
 zkdeploy: 
