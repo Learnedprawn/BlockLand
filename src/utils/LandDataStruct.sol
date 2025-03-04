@@ -3,13 +3,13 @@ pragma solidity ^0.8.20;
 
 library LandStructs {
     struct LandData {
-        string[] ownerNames;
+        string ownerName;
         string landAddress;
         string ownershipHistoryHash;
         string legalDocumentsHash;
         // string encumberances;
-        address[] owners;
-        uint256[] shares;
+        address owner;
+        uint256 share;
         uint256 price;
     }
 

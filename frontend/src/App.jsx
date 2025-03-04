@@ -5,6 +5,7 @@ import AadhaarProof from './pages/AadhaarProof'
 import HomePage from './pages/HomePage';
 import OnBoarding from './pages/Onboarding';
 import MarketPlacePage from './pages/MarketPlace';
+import Testing from './pages/Testing';
 
 // Rainbowkit imports
 import "@rainbow-me/rainbowkit/styles.css";
@@ -63,6 +64,7 @@ function App() {
               <Route path="/official" element={<Official />} />
               <Route path="/landregistry" element={<LandRegistryPage />} />
               <Route path="/marketplace" element={<MarketPlacePage/>} />
+              <Route path="/testing" element={<Testing/>}/>
             </Routes>
           </div>
         </RainbowKitProvider>
