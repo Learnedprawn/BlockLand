@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import {Script, console} from "forge-std/Script.sol";
 import {LandRegistry} from "../src/LandRegistry.sol";
 
-contract CounterScript is Script {
+contract DeployLandRegistry is Script {
     LandRegistry public landRegistry;
 
     function setUp() public {}

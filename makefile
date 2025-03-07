@@ -48,7 +48,7 @@ deploySingleOwnerNFT:
 	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
 
 deployLandRegistry:
-	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
+	@forge script script/LandRegistry.s.sol:DeployLandRegistry $(NETWORK_ARGS)
 
 mintSingleNFT:
 	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
