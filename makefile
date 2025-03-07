@@ -47,6 +47,11 @@ deployEnrollment:
 deploySingleOwnerNFT:
 	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
 
+deployLandRegistry:
+	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
+
+mintSingleNFT:
+	@forge script script/DeploySingleOwnerNFT.s.sol:DeploySingleOwnerNFT $(NETWORK_ARGS)
 
 zkdeploy: 
 	@forge create src/OurToken.sol:OurToken --rpc-url http://127.0.0.1:8011 --private-key $(DEFAULT_ZKSYNC_LOCAL_KEY) --legacy --zksync

@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import OnBoarding from './pages/Onboarding';
 import MarketPlacePage from './pages/MarketPlace';
 import Testing from './pages/Testing';
+import SingleNFTOwner from './pages/SingleNFTOwner';
 
 // Rainbowkit imports
 import "@rainbow-me/rainbowkit/styles.css";
@@ -65,6 +66,7 @@ function App() {
               <Route path="/landregistry" element={<LandRegistryPage />} />
               <Route path="/marketplace" element={<MarketPlacePage/>} />
               <Route path="/testing" element={<Testing/>}/>
+              <Route path="/nft" element={<SingleNFTOwner/>}/>
             </Routes>
           </div>
         </RainbowKitProvider>

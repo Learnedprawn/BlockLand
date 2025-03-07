@@ -49,7 +49,7 @@ contract SingleOwnerNFT is ERC721 {
                 _baseURI(),
                 Base64.encode(
                     bytes( // bytes casting actually unnecessary as 'abi.encodePacked()' returns a bytes
-                        abi.encode(
+                        abi.encodePacked(
                             '{"ownerName":"',
                             s_tokenIdToState[tokenId].ownerName, // You can add whatever name here
                             '", "landAddress":"',
