@@ -15,7 +15,7 @@ contract SingleOwnerNFT is ERC721 {
     mapping(uint256 tokenId => LandStructs.LandData landData) public s_tokenIdToState;
     uint256 public s_tokenCounter;
 
-    constructor() ERC721("LandNFT", "LNFT") {
+    constructor() ERC721("LandNFT", "LNFT") {   
         s_tokenCounter = 0;
     }
 

@@ -6,13 +6,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract LandRegistry is Ownable {
     struct LandData {
         uint256 id;
-        string[] ownerNames;
+        string ownerNames;
         uint256 price;
         string landAddress;
         string ownershipHistoryHash;
         string legalDocumentsHash;
-        address[] owners;
-        uint256[] shares;
+        address owners;
+        uint256 shares;
         bool isVerified;
     }
 
@@ -35,16 +35,16 @@ contract LandRegistry is Ownable {
     }
 
     function registerLand(
-        string[] memory _names,
+        string memory _names,
         uint256 _price,
         string memory _landAddress,
         string memory _ownershipHistoryHash,
         string memory _legalDocumentsHash,
-        address[] memory _owners,
-        uint256[] memory _shares
+        address _owners,
+        uint256 _shares
     ) external {
-        require(_owners.length > 0, "At least one owner required");
-        require(_owners.length == _shares.length, "Owners and shares length mismatch");
+        // require(_owners.length > 0, "At least one owner required");
+        // require(_owners.length == _shares.length, "Owners and shares length mismatch");
 
         landCounter++;
 
@@ -76,13 +76,13 @@ contract LandRegistry is Ownable {
         view
         returns (
             uint256 id,
-            string[] memory ownerNames,
+            string memory ownerNames,
             uint256 price,
             string memory landAddress,
             string memory ownershipHistoryHash,
             string memory legalDocumentsHash,
-            address[] memory owners,
-            uint256[] memory shares,
+            address owners,
+            uint256 shares,
             bool isVerified
         )
     {
