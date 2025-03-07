@@ -32,4 +32,9 @@ contract TestNFT is Test {
 
         assertEq(nftMinter.ownerOf(tokenId), NFTOwner);
     }
+
+    function test_TokenIdIncrement() public {
+        test_mintNFT();
+        assertEq(1, nftMinter.getTokenCounter());
+    }
 }
