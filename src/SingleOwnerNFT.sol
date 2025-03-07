@@ -40,6 +40,10 @@ contract SingleOwnerNFT is ERC721 {
         return s_tokenIdToState[tokenId];
     }
 
+    function getTokenCounter() public view returns (uint256) {
+        return s_tokenCounter;
+    }
+
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         if (ownerOf(tokenId) == address(0)) {
             revert ERC721Metadata__URI_QueryFor_NonExistentToken();
