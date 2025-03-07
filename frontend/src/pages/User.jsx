@@ -1,38 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { Home, Map, CheckCircle, Shield, Book, Search, DollarSign } from 'lucide-react';
+import { Home, Map, CheckCircle, Shield, Book, Search, DollarSign, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import SingleOwnerNFT from "../../../out/SingleOwnerNFT.sol/SingleOwnerNFT.json"
-
+import SingleOwnerNFT from "../../../out/SingleOwnerNFT.sol/SingleOwnerNFT.json";
+import MarketPlace from "../../../out/MarketPlace.sol/MarketPlace.json";
 
 const User = () => {
   const navigate = useNavigate();
   const [tokenId, setTokenId] = useState('');
   const [nftContract, setNFTContract] = useState(null);
   const [searchResult, setSearchResult] = useState(null);
-
+  const [marketPlaceContract, setMarketPlaceContract] = useState(null);
+  const [showSellModal, setShowSellModal] = useState(false);
+  const [buyerAddress, setBuyerAddress] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (window.ethereum) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
 
-
       const nftContractInstance = new ethers.Contract(
         import.meta.env.VITE_SINGLE_OWNER_NFT,
         SingleOwnerNFT.abi,
         signer
       );
+
+      const marketPlaceContractInstance = new ethers.Contract(
+        import.meta.env.VITE_MARKETPLACE_CONTRACT_ADDRESS,
+        MarketPlace.abi,
+        signer
+      );
+
       setNFTContract(nftContractInstance);
+      setMarketPlaceContract(marketPlaceContractInstance);
     }
   }, []);
 
-
   const handleTokenSearch = async () => {
     if (tokenId.trim()) {
-
-      const tokenDetails = await nftContract.getLandData(tokenId);
-      setSearchResult(tokenDetails);
+      try {
+        const tokenDetails = await nftContract.getLandData(tokenId);
+        setSearchResult(tokenDetails);
+      } catch (error) {
+        console.error("Error fetching token details:", error);
+        alert("Error fetching token details. Please check the token ID and try again.");
+      }
     }
   };
 
@@ -41,10 +54,31 @@ const User = () => {
     return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
   };
 
-  const handleSellNFT = () => {
-    // Handle sell NFT functionality
-    alert(`Preparing to sell NFT with token ID: ${tokenId}`);
-    // navigate(`/sell-nft/${tokenId}`);
+  const handleSellButtonClick = () => {
+    setShowSellModal(true);
+  };
+
+  const handleSellNFT = async () => {
+    if (!buyerAddress || !ethers.utils.isAddress(buyerAddress)) {
+      alert('Please enter a valid Ethereum address');
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      // First, add the land to the marketplace
+      const addToMarketTx = await marketPlaceContract.addLandToMarketPlace(tokenId, buyerAddress, { gasLimit: 10000000 });
+      await addToMarketTx.wait();
+
+      alert(`Land NFT successfully listed for sale to ${formatAddress(buyerAddress)}`);
+      setShowSellModal(false);
+      setBuyerAddress('');
+    } catch (error) {
+      console.error("Transaction error:", error);
+      alert(`Error during transaction: ${error.message || "Unknown error"}`);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -92,7 +126,6 @@ const User = () => {
           </div>
         </div>
 
-
         {searchResult && (
           <div className="w-full max-w-2xl mt-8 bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="bg-indigo-700 text-white p-4">
@@ -130,7 +163,7 @@ const User = () => {
 
               <div className="mt-6 flex justify-end">
                 <button
-                  onClick={handleSellNFT}
+                  onClick={handleSellButtonClick}
                   className="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
                 >
                   <DollarSign className="h-5 w-5" />
@@ -140,28 +173,70 @@ const User = () => {
             </div>
           </div>
         )}
-
-        {/* <div className="mt-6 flex space-x-4">
-          <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-md w-40">
-            <Map className="h-10 w-10 text-indigo-600" />
-            <p className="mt-2 font-medium">Manage Lands</p>
-          </div>
-
-          <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-md w-40">
-            <CheckCircle className="h-10 w-10 text-green-600" />
-            <p className="mt-2 font-medium">Verify Ownership</p>
-          </div>
-
-          <div className="flex flex-col items-center bg-white p-4 rounded-lg shadow-md w-40">
-            <Shield className="h-10 w-10 text-blue-600" />
-            <p className="mt-2 font-medium">Secure Transactions</p>
-          </div>
-        </div> */}
-
-        {/* <button className="mt-6 px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
-          Get Started
-        </button> */}
       </main>
+
+      {/* Sell Modal */}
+      {showSellModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-semibold">Sell Land NFT</h3>
+              <button
+                onClick={() => setShowSellModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="mb-4 text-sm text-gray-600">
+                Enter the Ethereum address of the buyer to sell this land NFT.
+              </p>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Buyer's Ethereum Address
+                </label>
+                <input
+                  type="text"
+                  value={buyerAddress}
+                  onChange={(e) => setBuyerAddress(e.target.value)}
+                  placeholder="0x..."
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowSellModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded shadow-sm text-gray-700 hover:bg-gray-50"
+                  disabled={isProcessing}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSellNFT}
+                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded shadow-sm flex items-center space-x-2"
+                  disabled={isProcessing}
+                >
+                  {isProcessing ? (
+                    <>
+                      <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <DollarSign className="h-4 w-4" />
+                      <span>Confirm Sale</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
