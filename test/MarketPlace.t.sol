@@ -15,6 +15,22 @@ contract TestMarketPlace is Test {
         marketPlace = new MarketPlace(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, singleOwnerNFT);
     }
 
+    function test_addLandToMarketPlace() public {
+        address buyer = makeAddr("buyer");
+        LandStructs.LandData memory landData = LandStructs.LandData({
+        ownerName: "Vinesh",
+        landAddress: "Ulwe",
+        ownershipHistoryHash: "anything",
+        legalDocumentsHash: "anything",
+        owner: makeAddr("NFT"),
+        share: 1,
+        price: 1
+        });
+        uint256 tokenId = SingleOwnerNFT(marketPlace.nftGeneration()).mintNft(landData);
+        marketPlace.addLandToMarketPlace(tokenId, buyer);
+        assertEq(marketPlace.s_tokenIdToSellState(tokenId), 1);
+    }
+
     
 
 

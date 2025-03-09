@@ -33,7 +33,7 @@ contract NFTMarketplaceEscrow {
         governmentOfficial = _govOfficial;
     }
 
-    function _createEscrow(address _buyer, address _nftContract, uint256 _tokenId, uint256 _price) internal {
+    function _createEscrow(address _buyer, address _nftContract, uint256 _tokenId, uint256 _price) internal returns(uint256) {
         IERC721 nft = IERC721(_nftContract);
         require(nft.ownerOf(_tokenId) == msg.sender, "You don't own this NFT");
         require(nft.getApproved(_tokenId) == address(this), "Contract not approved to transfer NFT");
@@ -49,6 +49,7 @@ contract NFTMarketplaceEscrow {
         });
 
         emit EscrowCreated(escrowCounter, msg.sender, _buyer, _tokenId);
+        return escrowCounter-1;
     }
 
     function approveEscrow(uint256 _escrowId) external onlyGovernmentOfficial {
@@ -59,20 +60,20 @@ contract NFTMarketplaceEscrow {
         emit EscrowApproved(_escrowId);
     }
 
-    function executeTransaction(uint256 _escrowId) external payable {
-        Escrow storage escrow = escrows[_escrowId];
-        require(escrow.approved, "Escrow not approved by government official");
-        require(msg.value >= escrow.price, "Insufficient funds sent");
-        require(msg.sender == escrow.buyer, "Only the buyer can execute");
+    // function executeTransaction(uint256 _escrowId) external payable {
+    //     Escrow storage escrow = escrows[_escrowId];
+    //     // require(escrow.approved, "Escrow not approved by government official");
+    //     require(msg.value >= escrow.price, "Insufficient funds sent");
+    //     require(msg.sender == escrow.buyer, "Only the buyer can execute");
 
-        // Transfer NFT to buyer
-        IERC721(escrow.nftContract).transferFrom(escrow.seller, escrow.buyer, escrow.tokenId);
+    //     // Transfer NFT to buyer
+    //     IERC721(escrow.nftContract).transferFrom(escrow.seller, escrow.buyer, escrow.tokenId);
 
-        // Transfer funds to seller
-        payable(escrow.seller).transfer(escrow.price);
+    //     // Transfer funds to seller
+    //     payable(escrow.seller).transfer(escrow.price);
 
-        emit TransactionExecuted(_escrowId);
-    }
+    //     emit TransactionExecuted(_escrowId);
+    // }
 
     function _cancelEscrow(uint256 _escrowId) internal {
         Escrow storage escrow = escrows[_escrowId];
