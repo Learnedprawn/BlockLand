@@ -33,14 +33,14 @@ contract NFTMarketplaceEscrow {
         governmentOfficial = _govOfficial;
     }
 
-    function _createEscrow(address _buyer, address _nftContract, uint256 _tokenId, uint256 _price) internal returns(uint256) {
+    function _createEscrow(address _buyer,address sender, address _nftContract, uint256 _tokenId, uint256 _price) internal returns (uint256){
         IERC721 nft = IERC721(_nftContract);
-        require(nft.ownerOf(_tokenId) == msg.sender, "You don't own this NFT");
+        require(nft.ownerOf(_tokenId) == sender, "You don't own this NFT");
         require(nft.getApproved(_tokenId) == address(this), "Contract not approved to transfer NFT");
 
         escrowCounter++;
         escrows[escrowCounter] = Escrow({
-            seller: msg.sender,
+            seller: sender,
             buyer: _buyer,
             nftContract: _nftContract,
             tokenId: _tokenId,
@@ -49,7 +49,9 @@ contract NFTMarketplaceEscrow {
         });
 
         emit EscrowCreated(escrowCounter, msg.sender, _buyer, _tokenId);
-        return escrowCounter-1;
+
+
+        return escrowCounter - 1;
     }
 
     function approveEscrow(uint256 _escrowId) external onlyGovernmentOfficial {
@@ -62,7 +64,7 @@ contract NFTMarketplaceEscrow {
 
     // function executeTransaction(uint256 _escrowId) external payable {
     //     Escrow storage escrow = escrows[_escrowId];
-    //     // require(escrow.approved, "Escrow not approved by government official");
+    //     require(escrow.approved, "Escrow not approved by government official");
     //     require(msg.value >= escrow.price, "Insufficient funds sent");
     //     require(msg.sender == escrow.buyer, "Only the buyer can execute");
 

@@ -11,10 +11,10 @@ const LandRegistryPage = () => {
   const [formData, setFormData] = useState({
     landAddress: '',
     ownerName: '',
-    ownerNames: [''],
+    ownerNames: '',
     ownerAddress: '',
-    ownerAddresses: [''],
-    shares: [],
+    ownerAddresses: '',
+    shares: 100,
     legalDocumentsHash: '',
     ownershipHistoryHash: '',
     price: 0
@@ -51,7 +51,7 @@ const LandRegistryPage = () => {
     if (type === "single")
       setFormData(prev => ({
         ...prev,
-        shares: [100]
+        shares: 100
       }));
     setStep(2);
   };
@@ -62,19 +62,6 @@ const LandRegistryPage = () => {
       ...prev,
       [name]: value
     }));
-
-    if (name === 'ownerAddress') {
-      setFormData(prev => ({
-        ...prev,
-        ownerAddresses: [value]
-      }));
-    }
-    if (name === "ownerName") {
-      setFormData(prev => ({
-        ...prev,
-        ownerNames: [value]
-      }));
-    }
   };
 
   const handleArrayInputChange = (index, field, value) => {
@@ -208,7 +195,7 @@ const LandRegistryPage = () => {
     setIsSubmitting(true);
 
 
-    const tx = await contract.registerLand(formData.ownerNames, formData.price, formData.landAddress, formData.ownershipHistoryHash, formData.legalDocumentsHash, formData.ownerAddresses, formData.shares);
+    const tx = await contract.registerLand(formData.ownerName, formData.price, formData.landAddress, formData.ownershipHistoryHash, formData.legalDocumentsHash, formData.ownerAddress, formData.shares);
 
     await tx.wait();
 
@@ -745,8 +732,8 @@ const LandRegistryPage = () => {
                     <span className="ml-2 font-mono text-sm">0x3a4e98b7d0c37ea9b606b4456a5b77c12c5ceb4e5782c574f319ac3c69c5d524</span>
                   </p>
                   <p>
-                    <span className="font-medium">Registration ID:</span>
-                    <span className="ml-2">{landCounter + 1}</span>
+                    {/* <span className="font-medium">Registration ID:</span>
+                    <span className="ml-2">{landCounter + 1}</span> */}
                   </p>
                 </div>
 
